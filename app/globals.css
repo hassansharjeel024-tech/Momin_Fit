@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #0B0907;
+    color: #F4EBDD;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: rgba(200, 147, 90, 0.3);
+    color: #F4EBDD;
+  }
+
+  /* Focus rings on every interactive element */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  summary:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid #C8935A;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  /* Subtle geometric lattice pattern — hero & auth brand panel only */
+  .lattice-bg {
+    background-color: #0B0907;
+    background-image:
+      linear-gradient(to right, rgba(139, 94, 52, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(139, 94, 52, 0.06) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+
+  .lattice-radial {
+    background-color: #0B0907;
+    background-image:
+      radial-gradient(ellipse at top, rgba(139, 94, 52, 0.10), transparent 60%),
+      linear-gradient(to right, rgba(139, 94, 52, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(139, 94, 52, 0.05) 1px, transparent 1px);
+    background-size: 100% 100%, 44px 44px, 44px 44px;
+  }
+}
+
+@layer utilities {
+  /* Staggered entrance for sections */
+  .reveal {
+    animation: fade-in-up 0.6s ease-out both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Native details/summary marker styling for FAQ */
+summary::-webkit-details-marker {
+  display: none;
+}
+summary {
+  list-style: none;
+}
