@@ -150,6 +150,8 @@ model WorkoutLog {
   completed    Boolean   @default(false)
   completedAt  DateTime?
   notes        String?
+    exerciseName    String?
+  durationMinutes Int?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 

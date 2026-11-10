@@ -56,7 +56,7 @@ export function LoginForm() {
         setSubmitting(false);
         return;
       }
-      window.location.href = '/';
+            window.location.href = '/dashboard';
     } catch {
       setServerError('Network error. Please try again.');
       setSubmitting(false);
