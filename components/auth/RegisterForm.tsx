@@ -26,7 +26,7 @@ export function RegisterForm() {
     confirm?: boolean;
   }>({});
   const [submitting, setSubmitting] = React.useState(false);
-  const [info, setInfo] = React.useState(false);
+  const [serverError, setServerError] = React.useState('');
 
   const validateField = (field: 'name' | 'email' | 'password' | 'confirm', val: string) => {
     switch (field) {
@@ -59,25 +59,38 @@ export function RegisterForm() {
     return !e.name && !e.email && !e.password && !e.confirm;
   };
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setTouched({ name: true, email: true, password: true, confirm: true });
+    setServerError('');
     if (!validateAll()) return;
     setSubmitting(true);
-    // TODO: Connect NextAuth registration here.
-    window.setTimeout(() => {
+    try {
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setServerError(data.error || 'Something went wrong. Please try again.');
+        setSubmitting(false);
+        return;
+      }
+      window.location.href = '/login';
+    } catch {
+      setServerError('Network error. Please try again.');
       setSubmitting(false);
-      setInfo(true);
-    }, 1200);
+    }
   };
 
   const errList = [errors.name, errors.email, errors.password, errors.confirm].filter(Boolean) as string[];
 
   return (
     <>
-      {info && (
-        <Alert tone="info" className="mb-5">
-          Demo only: authentication is not connected yet.
+      {serverError && (
+        <Alert tone="error" className="mb-5">
+          {serverError}
         </Alert>
       )}
       {errList.length > 0 && (

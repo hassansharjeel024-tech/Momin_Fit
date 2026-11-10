@@ -18,7 +18,7 @@ export function Navbar() {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line/60 bg-ink/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-line/60 bg-red-50/80 backdrop-blur-md">
       <Container>
         <nav className="flex items-center justify-between py-3.5">
           <Link href="/" aria-label="MominFit home">

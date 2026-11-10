@@ -7,6 +7,7 @@ import { TextField } from '@/components/ui/TextField';
 import { PasswordField } from '@/components/ui/PasswordField';
 import { Alert } from '@/components/ui/Alert';
 import { isValidEmail, isNonEmpty } from '@/lib/validation';
+import { signIn } from 'next-auth/react';
 
 export function LoginForm() {
   const [email, setEmail] = React.useState('');
@@ -17,7 +18,7 @@ export function LoginForm() {
   }>({});
   const [touched, setTouched] = React.useState<{ email?: boolean; password?: boolean }>({});
   const [submitting, setSubmitting] = React.useState(false);
-  const [info, setInfo] = React.useState(false);
+  const [serverError, setServerError] = React.useState('');
 
   const validateField = (field: 'email' | 'password', val: string) => {
     if (field === 'email') {
@@ -38,23 +39,35 @@ export function LoginForm() {
     return !e.email && !e.password;
   };
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setTouched({ email: true, password: true });
+    setServerError('');
     if (!validateAll()) return;
     setSubmitting(true);
-    // TODO: Connect NextAuth sign-in here.
-    window.setTimeout(() => {
+    try {
+      const res = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
+      if (res?.error) {
+        setServerError('Invalid email or password.');
+        setSubmitting(false);
+        return;
+      }
+      window.location.href = '/';
+    } catch {
+      setServerError('Network error. Please try again.');
       setSubmitting(false);
-      setInfo(true);
-    }, 1200);
+    }
   };
 
   return (
     <>
-      {info && (
-        <Alert tone="info" className="mb-5">
-          Demo only: authentication is not connected yet.
+      {serverError && (
+        <Alert tone="error" className="mb-5">
+          {serverError}
         </Alert>
       )}
       {(errors.email || errors.password) && (
